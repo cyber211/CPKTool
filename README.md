@@ -1,2 +1,2 @@
 # CPK curve
-This is a example project.
+This is a CPK tool for Probability Density curve.
