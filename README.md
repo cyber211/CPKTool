@@ -11,6 +11,6 @@ Main Function：
   
 3. Will auto generate a screenshoot for the initial curve,named cpk1.png
 screenshoots:
-![](https://github.com/cyber211/CPKTool/blob/master/cpk1.png)
-
+![Auto Generated picture:](https://github.com/cyber211/CPKTool/blob/master/cpk1.png)
+![Save as picture:](https://github.com/cyber211/CPKTool/blob/master/image.png)
 
