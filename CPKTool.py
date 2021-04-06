@@ -524,6 +524,7 @@ if __name__ == '__main__':
     app = wx.App()
     #frame = MPL2_Frame()
     frame = MPL_Frame(title="CPK Curve Analyzer", size=(1000, 600))
+    frame.SetIcon(wx.Icon("./title.ico"))
     frame.Center()
     frame.Show()
     app.MainLoop()

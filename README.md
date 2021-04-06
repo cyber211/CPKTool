@@ -1,5 +1,6 @@
 # a CPK curve analysis tool
-This is a CPK tool for Probability Density curve.
+This is a CPK tool for Probability Density curve.Main Window：
+![Main UI:](https://github.com/cyber211/CPKTool/blob/master/MAINUI.png)
 
 Main Function：
 1. Import data from xlsx file， the format pls see cpkdata.xlsx for example;
