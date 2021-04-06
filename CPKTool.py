@@ -33,8 +33,8 @@ class MPL_Panel_base(wx.Panel):
         self.StaticText = wx.StaticText(self, -1, label='Show information here!')
  
         self.SubBoxSizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.SubBoxSizer.Add(self.NavigationToolbar, proportion=-5, border=2, flag=wx.ALL | wx.EXPAND)
-        self.SubBoxSizer.Add(self.StaticText, proportion=-4, border=2, flag=wx.ALL | wx.EXPAND)
+        self.SubBoxSizer.Add(self.NavigationToolbar, proportion=-5, border=2) #flag=wx.ALL | wx.EXPAND
+        self.SubBoxSizer.Add(self.StaticText, proportion=-4, border=2)
  
         self.TopBoxSizer = wx.BoxSizer(wx.VERTICAL)
         self.TopBoxSizer.Add(self.SubBoxSizer, proportion=-1, border=2, flag=wx.ALL | wx.EXPAND)
@@ -189,20 +189,41 @@ class MPL_Frame(wx.Frame):
  
         self.RightPanel = wx.Panel(self, -1)
  
-        # 测试按钮1
-        self.BtnImport = wx.Button(self.RightPanel, -1, "导入数据", size=(100, 80), pos=(10, 10))
+        # Import按钮
+        self.BtnImport = wx.Button(self.RightPanel, -1, "导入数据", size=(100, 40), pos=(10, 10))
         self.BtnImport.Bind(wx.EVT_BUTTON, self.BtnImportEvent)
         
-        # 测试按钮2
-        self.BtnPlotCPK = wx.Button(self.RightPanel, -1, "生成曲线", size=(100, 80), pos=(10, 10))
+        # std
+        self.StaticText_STD = wx.StaticText(self.RightPanel, -1, label='\n测试点STD:',size=(100, 30), pos=(10, 10))
+        self.txtCtrl_STD = wx.TextCtrl(self.RightPanel, -1, value ='950.0',size=(100, 20), pos=(10, 10))
+        #self.BtnPlotCPK.Bind(wx.EVT_BUTTON, self.BtnPlotCPKEvent)
+        
+        #lsl
+        self.StaticText_LSL = wx.StaticText(self.RightPanel, -1, label='\n下限LSL:',size=(100, 30), pos=(10, 10))
+        self.txtCtrl_LSL = wx.TextCtrl(self.RightPanel, -1, value ='930.5',size=(100, 20), pos=(10, 10))
+
+        
+        # usl
+        self.StaticText_USL = wx.StaticText(self.RightPanel, -1, label='\n上限USL:',size=(100, 30), pos=(10, 10))
+        self.txtCtrl_USL = wx.TextCtrl(self.RightPanel, -1,value ='969.5', size=(100, 20), pos=(10, 10))
+        
+        
+        # PlotCPK按钮
+        self.BtnPlotCPK = wx.Button(self.RightPanel, -1, "生成CPK曲线", size=(100, 40), pos=(10, 10))
         self.BtnPlotCPK.Bind(wx.EVT_BUTTON, self.BtnPlotCPKEvent)
  
-        # 测试按钮2
-        self.BtnAbout = wx.Button(self.RightPanel, -1, "关于", size=(100, 80), pos=(10, 10))
+        # About按钮
+        self.BtnAbout = wx.Button(self.RightPanel, -1, "关于", size=(100, 40), pos=(10, 10))
         self.BtnAbout.Bind(wx.EVT_BUTTON, self.BtnAboutEvent)
  
         # 加入Sizer中
         self.FlexGridSizer.Add(self.BtnImport, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.StaticText_STD, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.txtCtrl_STD, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.StaticText_LSL, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.txtCtrl_LSL, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.StaticText_USL, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
+        self.FlexGridSizer.Add(self.txtCtrl_USL, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
         self.FlexGridSizer.Add(self.BtnPlotCPK, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
         self.FlexGridSizer.Add(self.BtnAbout, proportion=0, border=5, flag=wx.ALL | wx.EXPAND)
  
@@ -216,16 +237,22 @@ class MPL_Frame(wx.Frame):
  
         # 状态栏
         self.StatusBar()
-        self.MPL.ShowHelpString("1. Import the sample date in xlsx files!\r\n2. Press the Plotting button to genarate the Probability Density curve.")
+        self.MPL.ShowHelpString("1. Import the sample date in xlsx files!\r\n2. Fill STD,USL,LSL\r\n3. Press the Plotting button to genarate the Probability Density curve.")
  
         # MPL_Frame界面居中显示
         self.Centre(wx.BOTH) 
         self.pd_data = None
  
  
-        # 按钮事件,用于测试
- 
+    # 按钮事件,用于测试 
     def BtnPlotCPKEvent(self, event):
+    
+        if self.pd_data is  None: 
+            dlg = wx.MessageDialog(self, 'Please import data first~~~~!!!!\n')
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
+        
         self.MPL.cla()  # 必须清理图形,才能显示下一幅图
         
         #x = np.arange(-10, 10, 0.25)
@@ -237,7 +264,13 @@ class MPL_Frame(wx.Frame):
         #self.MPL.title_MPL("MPL1")   
         usl = 969.5
         lsl = 930.5
-        std = 950        
+        std = 950   
+
+        usl = float(self.txtCtrl_USL.GetValue())
+        lsl = float(self.txtCtrl_LSL.GetValue())
+        std = float(self.txtCtrl_STD.GetValue())
+        print(usl,lsl,std)
+        
         self.cpk_calc(self.pd_data,usl,lsl,std) 
         
         
@@ -317,9 +350,9 @@ class MPL_Frame(wx.Frame):
         legendlist.append('3 Sigma')
         
         self.MPL.legend(legendlist)
-        self.MPL.xlabel('Readings')
+        self.MPL.xlabel(title)
         self.MPL.ylabel('Probability Density')
-        self.MPL.title_MPL(title)
+        #self.MPL.title_MPL(title)
         #self.MPL.ShowHelpString(title)
         
         self.MPL.savefig('cpk1.png',bbox_inches='tight')
@@ -343,7 +376,7 @@ class MPL_Frame(wx.Frame):
         try:
             self.pd_data = pd.read_excel(pathname, usecols=[1, 2, 3, 4, 5,6])
             if self.pd_data is not None: 
-                print(self.pd_data)
+                #print(self.pd_data)
                 self.statusbar.SetStatusText(pathname)
                 #self.MPL.ShowHelpString(pathname)
         except:
