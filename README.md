@@ -10,4 +10,6 @@ Main Function：
   - Save current figure as a .png file;
   
 3. Will auto generate a screenshoot for the initial curve,named cpk1.png
+screenshoots:
+[!https://github.com/cyber211/CPKTool/blob/master/cpk1.png]
 
