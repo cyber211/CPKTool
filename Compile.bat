@@ -1,5 +1,5 @@
 CD %CD%
 
-pyinstaller -F CPKTool.py
+pyinstaller  -D CPKTool.py  -w
 
 pause

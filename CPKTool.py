@@ -288,7 +288,7 @@ class MPL_Frame(wx.Frame):
         title = None
         legendlist = []
         
-        sigma = 3
+        sigma_level = 3
         
         # 若下限为0, 则使用上限反转负值替代
         if int(lsl) == 0:
@@ -303,30 +303,31 @@ class MPL_Frame(wx.Frame):
             u = s.values[i]
 
             # 数据标准差
-            stdev = np.std(df_data.values, ddof=1)
+            stdev = np.std(df_data[serialTitle].values, ddof=1)
 
             # 生成横轴数据平均分布
-            #x1 = np.linspace(std - sigma * stdev-0.5, std + sigma * stdev + 0.5, 1000)
+            #x1 = np.linspace(std - sigma_level * stdev-0.5, std + sigma_level * stdev + 0.5, 1000)
             x1 = np.linspace(lsl - 0.5, usl + 0.5, 1000)
 
             # 计算正态分布曲线
             y1 = np.exp(-(x1 - u) ** 2 / (2 * stdev ** 2)) / (math.sqrt(2 * math.pi) * stdev)
             
             # 得出cpk
-            cpu = (usl - u) / (sigma * stdev)
-            cpl = (u - lsl) / (sigma * stdev)       
+            cpu = (usl - u) / (sigma_level * stdev)
+            cpl = (u - lsl) / (sigma_level * stdev)       
             cpk = min(cpu, cpl)
 
             # 使用matplotlib画图
             #self.MPL.xlim(x1[0] - 0.5, x1[-1] + 0.5)
             self.MPL.xlim(lsl - 0.5, usl + 0.5)
             
+            print(serialTitle,cpk,u,stdev)
             self.MPL.plot(x1, y1)
             #plt.hist(df_data.values, 15, density=True)   # bar
             if title is None:  #{:20}\t{:28}\t{:32}
-                title = "{:<10} :CPK={:<15},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev)
+                title = "{:<10} :CPK={:<6},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev)
             else:
-                title = title + ("{:<10} :CPK={:<15},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev))
+                title = title + ("{:<10} :CPK={:<6},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev))
                 
             
             
@@ -343,10 +344,10 @@ class MPL_Frame(wx.Frame):
         self.MPL.plot_axvline(std, color='r', linestyle='--', label='STD')   
         legendlist.append('STD')
         
-        self.MPL.plot_axvline(std - sigma * stdev, color='blue', linestyle='--', label='-3 Sigma')
+        self.MPL.plot_axvline(std - sigma_level * stdev, color='blue', linestyle='--', label='-3 Sigma')
         legendlist.append('-3 Sigma')
         
-        self.MPL.plot_axvline(std + sigma * stdev, color='blue', linestyle='--', label='3 Sigma')
+        self.MPL.plot_axvline(std + sigma_level * stdev, color='blue', linestyle='--', label='3 Sigma')
         legendlist.append('3 Sigma')
         
         self.MPL.legend(legendlist)
