@@ -1,5 +1,5 @@
 CD %CD%
 
-pyinstaller  -D CPKTool.py  -w
+pyinstaller -D  CPKTool.py -i "title.ico"
 
 pause

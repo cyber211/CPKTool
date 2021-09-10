@@ -307,7 +307,7 @@ class MPL_Frame(wx.Frame):
 
             # 生成横轴数据平均分布
             #x1 = np.linspace(std - sigma_level * stdev-0.5, std + sigma_level * stdev + 0.5, 1000)
-            x1 = np.linspace(lsl - 0.5, usl + 0.5, 1000)
+            x1 = np.linspace(lsl - 0.0000005, usl + 0.0000005, 1000)
 
             # 计算正态分布曲线
             y1 = np.exp(-(x1 - u) ** 2 / (2 * stdev ** 2)) / (math.sqrt(2 * math.pi) * stdev)
@@ -319,15 +319,15 @@ class MPL_Frame(wx.Frame):
 
             # 使用matplotlib画图
             #self.MPL.xlim(x1[0] - 0.5, x1[-1] + 0.5)
-            self.MPL.xlim(lsl - 0.5, usl + 0.5)
+            self.MPL.xlim(lsl - 0.0000005, usl + 0.0000005)
             
             print(serialTitle,cpk,u,stdev)
             self.MPL.plot(x1, y1)
             #plt.hist(df_data.values, 15, density=True)   # bar
             if title is None:  #{:20}\t{:28}\t{:32}
-                title = "{:<10} :CPK={:<6},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev)
+                title = "{:<10} :CPK={:<6},mean = {:.9f},stdev = {:.9f}\n".format(serialTitle,cpk,u,stdev)
             else:
-                title = title + ("{:<10} :CPK={:<6},mean = {:.2f},stdev = {:.6f}\n".format(serialTitle,cpk,u,stdev))
+                title = title + ("{:<10} :CPK={:<6},mean = {:.9f},stdev = {:.9f}\n".format(serialTitle,cpk,u,stdev))
                 
             
             
@@ -356,7 +356,7 @@ class MPL_Frame(wx.Frame):
         #self.MPL.title_MPL(title)
         #self.MPL.ShowHelpString(title)
         
-        self.MPL.savefig('cpk1.png',bbox_inches='tight')
+        self.MPL.savefig('{}.png'.format(self.txtCtrl_STD.GetValue()),bbox_inches='tight')
         #plt.show()
 
  
@@ -381,25 +381,13 @@ class MPL_Frame(wx.Frame):
                 self.statusbar.SetStatusText(pathname)
                 #self.MPL.ShowHelpString(pathname)
         except:
-            dlg = wx.MessageDialog(self, 'Error opening file\n')
+            dlg = wx.MessageDialog(self, 'Error opening file,the file may be used by others, please close it first.\n')
             dlg.ShowModal()
             dlg.Destroy()
 
         open_dlg.Destroy()
         
-        # with wx.FileDialog(self, message='Choose a file', wildcard=wildcard,style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
-            # # ask the user what new file to open
-            # if fileDialog.ShowModal() == wx.ID_CANCEL:
-                # return     # the user changed their mind
 
-            # # Proceed loading the file chosen by the user
-            # pathname = fileDialog.GetPath()
-            # try:
-                # with open(pathname, 'r') as xlsx_file:
-                    # self.pd_data = pd.read_excel(xlsx_file, usecols=[1, 2, 3, 4, 5,6])
-                    
-            # except IOError:
-                # wx.LogError("Cannot open file '%s'." % pathname)
  
  
  
@@ -408,14 +396,14 @@ class MPL_Frame(wx.Frame):
         self.statusbar = self.CreateStatusBar(2)
         #self.statusbar.SetFieldsCount(3)
         self.statusbar.SetStatusWidths([-7, -5]) 
-        self.statusbar.SetStatusText('Field 1 here!')
-        self.statusbar.SetStatusText('CPK Curve Tool V1.0 ,Copyright 2021, by Bob Cao(yongbo.cao@fluke.com)', 1)
+        self.statusbar.SetStatusText('Information here!')
+        self.statusbar.SetStatusText('CPK Curve Tool V1.1 ,Copyright 2021, by Bob Cao(yongbo.cao@fluke.com)', 1)
         
  
     # About对话框 
     def AboutDialog(self):
         dlg = wx.MessageDialog(self,
-                               '\tUsing wx + MatPlotLib\t\nAnd inherit from opensource:MPL_Panel_base,MPL_Panel,MPL_Frame and MPL2_Frame \n Created by Bob Cao\n Version 1.0.0 \n 2021-04-01',
+                               '\tUsing wx + MatPlotLib\t\nAnd inherit from opensource:MPL_Panel_base,MPL_Panel,MPL_Frame and MPL2_Frame \n Created by Bob Cao\n Version 1.0.1 \n 2021-04-01',
                                'About CPK Tool', wx.OK | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -525,7 +513,7 @@ if __name__ == '__main__':
     app = wx.App()
     #frame = MPL2_Frame()
     frame = MPL_Frame(title="CPK Curve Analyzer", size=(1000, 600))
-    frame.SetIcon(wx.Icon("./title.ico"))
+    #frame.SetIcon(wx.Icon("./title.ico"))
     frame.Center()
     frame.Show()
     app.MainLoop()
